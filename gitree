@@ -3,10 +3,6 @@
 # gitree 0.1.0
 # Copyright 2016 Jacob Wahlgren <jacob.wahlgren@gmail.com>
 
-# gitree is a wrapper utility around tree created by Steve Baker et al. It
-# reads your .gitignore and excludes those paths from being listed in the
-# output of tree.
-
 
 script_name="gitree"
 
