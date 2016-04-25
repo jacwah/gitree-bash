@@ -11,15 +11,14 @@ function binary_exists_or_exit {
 }
 
 # Build a string of .gitignored files separated by pipes (|)
-# TODO Do not list files under excluded directories or the command length easily
-# exceeds the maximum
 function ignore_string {
 	# Default to cwd
 	dir="$1"
 	test -z ${dir} && dir=.
 
 	# Removing leading ./ works around bug in tree -I option
-	find ${dir} | git check-ignore --stdin | skip_with_pipes | sed 's|^./||' | tr '\n' '|'
+	# TODO Why is each file listed twice?
+	find ${dir} -exec git check-ignore {} \; -prune -print | skip_with_pipes | sed 's|^./||' | tr '\n' '|'
 }
 
 # Names including a pipe character would not be properly handled by tree -I
