@@ -32,9 +32,18 @@ function skip_with_pipes {
 binary_exists_or_exit git
 binary_exists_or_exit tree
 
+exit_val=1
+
 # TODO Pass options to tree
-# TODO Following lines are unsafe e.g. if string contains whitespace
-cmd="tree -I $(ignore_string $1)"
-echo "Running $cmd"
-$cmd
-exit $?
+if git rev-parse --is-inside-work-tree 2>/dev/null >/dev/null; then
+	# TODO Following lines are unsafe e.g. if string contains whitespace
+	cmd="tree -I $(ignore_string $1)"
+	echo "Running $cmd"
+	$cmd
+	exit_val=$?
+else
+	tree
+	exit_val=$?
+fi
+
+exit ${exit_val}
