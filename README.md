@@ -3,6 +3,8 @@
 reads your `.gitignore` and excludes those paths from being listed in the
 output of `tree`.
 
+[![asciicast](https://asciinema.org/a/43532.png)](https://asciinema.org/a/43532)
+
 ## Installation
 If you haven't already, first install [Git](https://git-scm.com/) and [Tree](http://mama.indstate.edu/users/ice/tree/index.html). Versions may be available from your package manager (apt-get, homebrew, etc).
 
