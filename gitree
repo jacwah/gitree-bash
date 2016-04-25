@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# gitree 0.1.0
+# Copyright 2016 Jacob Wahlgren <jacob.wahlgren@gmail.com>
+
+# gitree is a wrapper utility around tree created by Steve Baker et al. It
+# reads your .gitignore and excludes those paths from being listed in the
+# output of tree.
+
+
+script_name="gitree"
+
+function binary_exists_or_exit {
+	hash "$1" 2>/dev/null || { echo >&2 "$1 is required to run $script_name. Please install it and try again."; exit 1; }
+}
+
+# Build a string of .gitignored files separated by pipes (|)
+function ignore_string {
+	# Default to cwd
+	dir="$1"
+	test -z ${dir} && dir=.
+
+	# Removing leading ./ works around bug in tree -I option
+	find ${dir} | git check-ignore --stdin | skip_with_pipes | sed 's|^./||' | tr '\n' '|'
+}
+
+# Names including a pipe character would not be properly handled by tree -I
+function skip_with_pipes {
+	# TODO Print message to stderr when a file is skipped
+	grep -v '|'
+}
+
+
+binary_exists_or_exit git
+binary_exists_or_exit tree
+
+# TODO Pass options to tree
+# TODO Following lines are unsafe e.g. if string contains whitespace
+cmd="tree -I $(ignore_string $1)"
+echo "Running $cmd"
+$cmd
+exit $?
