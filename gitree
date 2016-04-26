@@ -13,6 +13,7 @@ function binary_exists_or_exit {
 # Build a string of .gitignored files separated by pipes (|)
 function ignore_string {
 	# Removing leading ./ works around bug in tree -I option
+	# TODO Use -execdir to check for nested git repos even if root dir is not
 	find . -exec git check-ignore {} \; -prune | skip_with_pipes | sed 's|^./||' | tr '\n' '|'
 }
 
@@ -37,7 +38,7 @@ cd ${dir} || exit 1
 # TODO Pass options to tree
 if git rev-parse --is-inside-work-tree 2>/dev/null >/dev/null; then
 	# TODO Following lines are unsafe e.g. if string contains whitespace
-	cmd="tree -I $(ignore_string $1)"
+	cmd="tree -I $(ignore_string)"
 	echo "Running $cmd"
 	$cmd
 	exit_val=$?
