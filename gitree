@@ -12,10 +12,6 @@ function binary_exists_or_exit {
 
 # Build a string of .gitignored files separated by pipes (|)
 function ignore_string {
-	# Default to cwd
-	dir="$1"
-	test -z ${dir} && dir=.
-
 	# Removing leading ./ works around bug in tree -I option
 	# TODO Why is each file listed twice?
 	find ${dir} -exec git check-ignore {} \; -prune -print | skip_with_pipes | sed 's|^./||' | tr '\n' '|'
@@ -32,6 +28,12 @@ binary_exists_or_exit git
 binary_exists_or_exit tree
 
 exit_val=1
+
+# Default to cwd
+# TODO Don't use cd to make output same as tree
+dir="$1"
+test -z ${dir} && dir=.
+cd ${dir} || exit 1
 
 # TODO Pass options to tree
 if git rev-parse --is-inside-work-tree 2>/dev/null >/dev/null; then
